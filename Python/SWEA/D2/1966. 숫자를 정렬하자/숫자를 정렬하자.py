@@ -1,17 +1,10 @@
 T = int(input())
-# 여러개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
+
 for test_case in range(1, T + 1):
+  # 주어진 숫자 개수
   N = int(input())
-  array = list(map(int, input().split()))
-
-  # 버블 정렬을 사용하여 배열을 정렬합니다.
-  for i in range(N):
-    for j in range(N - i - 1):
-      if array[j] > array[j + 1]:
-        array[j], array[j + 1] = array[j + 1], array[j]
-
-  # 정렬된 배열을 출력합니다.
-  print(f"#{test_case}", end=" ")
-  for i in array:
-    print(i, end=" ")
-  print()
+  
+  # 숫자열 받기
+  numbers = sorted(list(map(int, input().split())))
+  
+  print(f'#{test_case}', *numbers)
