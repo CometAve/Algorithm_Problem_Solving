@@ -1,17 +1,17 @@
 for test_case in range(1, 11):
     N = int(input())
-    building_list = list(map(int, input().split()))
-    total_view = 0
+    b = list(map(int, input().split()))
+    v = 0
     for i in range(2, N - 2):
  
-        building_heights_list = building_list[i - 2:i + 3]
-        building_heights_list.pop(2)
+        b_lst = b[i - 2:i + 3]
+        b_lst.pop(2)
  
         highest = 0
-        for height in building_heights_list:
-            if height > highest:
-                highest = height
+        for h in b_lst:
+            if h > highest:
+                highest = h
  
-        if building_list[i] > highest:
-            total_view += (building_list[i] - highest)
-    print(f'#{test_case} {total_view}')
+        if b[i] > highest:
+            v += (b[i] - highest)
+    print(f'#{test_case} {v}')
