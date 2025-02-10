@@ -1,22 +1,25 @@
+def solve():
+    max_sum = 0
+    for i in range(N):
+        for j in range(M):
+            power = board[i][j]
+            # 현재 위치값으로 초기화
+            current = power
+            
+            # 한 번의 순회로 상하좌우 처리
+            for k in range(1, power + 1):
+                # 상하
+                if i - k >= 0: current += board[i-k][j]
+                if i + k < N: current += board[i+k][j]
+                # 좌우
+                if j - k >= 0: current += board[i][j-k]
+                if j + k < M: current += board[i][j+k]
+                    
+            max_sum = max(max_sum, current)
+    return max_sum
+
 T = int(input())
-
-def get_max_flowers(i, j, N, M, balloons):
-  power = balloons[i][j]
-  total = power
-  
-  for di, dj in [(0,1), (1,0), (0,-1), (-1,0)]:
-    for dist in range(1, power+1):
-      ni, nj = i + di * dist, j + dj * dist
-      if 0 <= ni < N and 0 <= nj < M:
-        total += balloons[ni][nj]
-  return total 
-
 for test_case in range(1, T + 1):
-  N, M = map(int, input().split())
-  balloons = [list(map(int, input().split())) for _ in range(N)]
-  max_sum = 0
-  for i in range(N):
-    for j in range(M):
-      max_sum = max(max_sum, get_max_flowers(i, j, N, M, balloons))
-      
-  print(f'#{test_case} {max_sum}')
+    N, M = map(int, input().split())
+    board = [list(map(int, input().split())) for _ in range(N)]
+    print(f'#{test_case} {solve()}')
