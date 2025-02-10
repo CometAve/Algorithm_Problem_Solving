@@ -1,25 +1,26 @@
-for tc in range(1, 11):
-  t = int(input())
-  ladder = [list(map(int, input().split())) for _ in range(100)]
-
-  # 도착점 찾기
-  x = 99
-  y = ladder[99].index(2)
-  
-  # 도착점에서 출발점 찾기
-  while x > 0:
-    # 위로 이동하면서 좌우 1 확인
-    # 왼쪽에 1이 있는지 확인
-    if y - 1 >= 0 and ladder[x][y - 1] == 1:
-      # 좌로 이동하면서 위에 1이 있는지 확인
-      while y - 1 >= 0 and ladder[x][y - 1] == 1:
-        y -= 1
-    # 오른쪽에 1이 있는지 확인
-    elif y + 1 < 100 and ladder[x][y + 1] == 1:
-      # 우로 이동하면서 위에 1이 있는지 확인
-      while y + 1 < 100 and ladder[x][y + 1] == 1:
-        y += 1
+def find_start():
+    # 도착점 찾기
+    y = ladder[99].index(2)
+    x = 99
     
-    # 위로 이동
-    x -= 1
-  print(f'#{tc} {y}')
+    while x > 0:
+        x -= 1  # 먼저 위로 이동
+        
+        # 왼쪽 확인 및 이동
+        if y > 0 and ladder[x][y-1]:
+            while y > 0 and ladder[x][y-1]:
+                y -= 1
+            continue
+            
+        # 오른쪽 확인 및 이동
+        if y < 99 and ladder[x][y+1]:
+            while y < 99 and ladder[x][y+1]:
+                y += 1
+            continue
+    
+    return y
+
+for tc in range(1, 11):
+    t = int(input())
+    ladder = [list(map(int, input().split())) for _ in range(100)]
+    print(f'#{tc} {find_start()}')
