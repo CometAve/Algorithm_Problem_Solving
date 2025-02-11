@@ -17,5 +17,5 @@ for test_case in range(T):
         count_lst[string_dict[number]] += 1
 
     print(f'#{N}')
-    for i in range(10):
-        print(f'{string_lst[i]} ' * count_lst[i], end='')
+    for idx, value in enumerate(count_lst):
+        print(f'{string_lst[idx]} ' * value, end="")
