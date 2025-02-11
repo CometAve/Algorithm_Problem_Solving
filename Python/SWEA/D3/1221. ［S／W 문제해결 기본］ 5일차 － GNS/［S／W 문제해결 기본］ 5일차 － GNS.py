@@ -1,6 +1,6 @@
 T = int(input())
  
-string = ["ZRO", "ONE", "TWO", "THR", "FOR", "FIV", "SIX", "SVN", "EGT", "NIN"]
+string = ['ZRO', 'ONE', 'TWO', 'THR', 'FOR', 'FIV', 'SIX', 'SVN', 'EGT', 'NIN']
  
 for test_case in range(T):
      
@@ -10,10 +10,10 @@ for test_case in range(T):
     N = N[1:]
     count_lst = [0] * 10
     numbers = input().split()
-    # 외계어 숫자를 실제 숫자로 변환 인덱스 사용해서 카운팅 배열에 저장
+    # 외계어 숫자를 실제 숫자로 변환하여 카운트
     for number in numbers:
         count_lst[string.index(number)] += 1
-        
+ 
     print(f'#{N}')
-    for idx, value in enumerate(count_lst):
-        print(f'{string[idx]} ' * value, end='')
+    for idx, count in enumerate(count_lst):
+        print((f'{string[idx]} ' * count).strip())
