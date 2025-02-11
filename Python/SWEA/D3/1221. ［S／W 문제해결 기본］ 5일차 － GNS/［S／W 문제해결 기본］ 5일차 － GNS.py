@@ -13,4 +13,4 @@ for test_case in range(1, T+1):
  
     print(f'#{test_case}')
     for idx, count in enumerate(count_lst):
-        print((f'{num_lst[idx]} ' * count).strip())
+        print((f'{num_lst[idx]} ' * count), end='')
