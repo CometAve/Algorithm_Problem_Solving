@@ -1,19 +1,16 @@
 T = int(input())
  
-string = ['ZRO', 'ONE', 'TWO', 'THR', 'FOR', 'FIV', 'SIX', 'SVN', 'EGT', 'NIN']
- 
-for test_case in range(T):
+num_lst = ['ZRO', 'ONE', 'TWO', 'THR', 'FOR', 'FIV', 'SIX', 'SVN', 'EGT', 'NIN']
+str_dict = {num: idx for idx, num in enumerate(num_lst)}
+
+for test_case in range(1, T+1):
      
     N, M = input().split()
-    M = int(M)
-    # '#' 제거
-    N = N[1:]
     count_lst = [0] * 10
-    numbers = input().split()
-    # 외계어 숫자를 실제 숫자로 변환하여 카운트
-    for number in numbers:
-        count_lst[string.index(number)] += 1
+    
+    for number in input().split():
+        count_lst[str_dict[number]] += 1
  
-    print(f'#{N}')
+    print(f'#{test_case}')
     for idx, count in enumerate(count_lst):
-        print((f'{string[idx]} ' * count).strip())
+        print((f'{num_lst[idx]} ' * count).strip())
