@@ -4,18 +4,16 @@ string_dict = {"ZRO" : 0, "ONE" : 1, "TWO" : 2, "THR" : 3, "FOR" : 4, "FIV" : 5,
 
 string_lst = ["ZRO", "ONE", "TWO", "THR", "FOR", "FIV", "SIX", "SVN", "EGT", "NIN"]
 
-for test_case in range(T):
+for test_case in range(1, T+1):
     
-    N, M = input().split()
+    _, M = input().split()
     M = int(M)
-    # '#' 제거
-    N = N[1:]
     count_lst = [0] * 10
 
     # 외계어 숫자를 실제 숫자로 변환하여 카운트
     for number in input().split():
         count_lst[string_dict[number]] += 1
 
-    print(f'#{N}')
+    print(f'#{test_case}')
     for idx, value in enumerate(count_lst):
         print(f'{string_lst[idx]} ' * value, end="")
