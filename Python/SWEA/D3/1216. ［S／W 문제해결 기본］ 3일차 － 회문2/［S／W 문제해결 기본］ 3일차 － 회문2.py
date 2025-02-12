@@ -1,13 +1,13 @@
 N = 100
-
+ 
 T = 10
-
+ 
 for test_case in range(1, T+1):
     tc_number = int(input())
-
+ 
     arr = [input() for _ in range(N)]
     max_length = 0
-
+ 
     for i in range(N):
         for j in range(N):
             for k in range(3, N):
@@ -17,10 +17,6 @@ for test_case in range(1, T+1):
                 if word == word[::-1]:
                     if len(word) > max_length:
                         max_length = len(word)
-
-    for j in range(N):
-        for i in range(N):
-            for k in range(3, N):
                 if i + k > N:
                     break
                 word = ''
