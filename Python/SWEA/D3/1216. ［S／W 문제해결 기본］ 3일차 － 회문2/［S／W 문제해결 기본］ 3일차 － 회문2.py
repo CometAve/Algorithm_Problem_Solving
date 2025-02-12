@@ -11,14 +11,9 @@ for test_case in range(1, T+1):
     for i in range(N):
         for j in range(N):
             for k in range(3, N):
-                if j + k > N:
+                if j + k > N or i + k > N:
                     break
                 word = arr[i][j:j + k]
-                if word == word[::-1]:
-                    if len(word) > max_length:
-                        max_length = len(word)
-                if i + k > N:
-                    break
                 word = ''
                 for l in range(k):
                     word += arr[i + l][j]
