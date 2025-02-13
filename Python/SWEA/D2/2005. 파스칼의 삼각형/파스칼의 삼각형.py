@@ -1,17 +1,26 @@
 T = int(input())
 
-def create_pascal(n):
-    pascal = [[1]]
-    for i in range(1, n):
+# 파스칼 삼각형 재귀함수로 생성
+def create_pascal_with_recursive(n):
+    pascal = []
+    if n == 1:
         pascal.append([1])
-        for j in range(1, i):
-            pascal[i].append(pascal[i-1][j-1] + pascal[i-1][j])
-        pascal[i].append(1)
-    return pascal
-
+        return pascal
+    elif n == 2:
+        pascal.append([1])
+        pascal.append([1, 1])
+        return pascal
+    else:
+        prev = create_pascal_with_recursive(n-1)
+        new = [1]
+        for i in range(len(prev[-1])-1):
+            new.append(prev[-1][i]+prev[-1][i+1])
+        new.append(1)
+        prev.append(new)
+        return prev
+    
 for tc in range(T):
     N = int(input())
-    pascal = create_pascal(N)
+    pascal = create_pascal_with_recursive(N)
     print(f"#{tc+1}")
-    for i in range(N):
-        print(" ".join(map(str, pascal[i])))
+    print("\n".join([" ".join(map(str, i)) for i in pascal]))
