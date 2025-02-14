@@ -10,7 +10,6 @@ def create_pascal_with_recursive(n):
     
 for tc in range(T):
     N = int(input())
-    pascal = create_pascal_with_recursive(N)
     print(f"#{tc+1}")
     for i in range(1, N+1):
         print(" ".join(map(str, create_pascal_with_recursive(i))))
