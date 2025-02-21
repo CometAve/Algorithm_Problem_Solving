@@ -41,3 +41,59 @@
 
  <p>첫째 줄에 땅을 고르는 데 걸리는 시간과 땅의 높이를 출력하시오. 답이 여러 개 있다면 그중에서 땅의 높이가 가장 높은 것을 출력하시오.</p>
 
+### 회고
+[첫 풀이](https://github.com/HyeseongRo/Algorithm_Problem_Solving/blob/main/PyPy3/%EB%B0%B1%EC%A4%80/Silver/18111.%E2%80%85%EB%A7%88%EC%9D%B8%ED%81%AC%EB%9E%98%ED%94%84%ED%8A%B8/%EB%A7%88%EC%9D%B8%ED%81%AC%EB%9E%98%ED%94%84%ED%8A%B8.py)
+
+#### 문제 접근 및 초기 풀이  
+문제는 주어진 땅의 높이를 일정하게 만드는 데 필요한 최소 시간과 해당 높이를 찾는 문제입니다.  
+초기 풀이에서는 0부터 256까지 모든 높이를 대상으로, 매 높이마다 이중 반복문을 돌며 각 위치의 블록을 확인했습니다.
+
+- **시간 복잡도 문제:**  
+  매 후보 높이마다 전체 \(N \times M\) 격자를 탐색하므로, 최악의 경우 \(257 \times (N \times M)\)번의 연산이 발생합니다.  
+  이 방식은 입력 크기가 커질 경우 Python3에서 시간초과(TLE)를 발생시킬 수 있었습니다.
+
+#### PyPy3에서 통과한 이유  
+PyPy3는 JIT 컴파일러를 사용하여 반복문 등의 연산을 최적화하기 때문에, 동일한 알고리즘이라도 실행 속도가 개선되어 제출이 통과되었습니다.
+
+#### 최종 풀이로의 전환 (카운팅 정렬 적용)  
+최종 풀이에서는 **카운팅 정렬** 기법을 사용했습니다.
+
+1. **데이터 전처리:**  
+   - 전체 격자를 한 번 순회하면서 각 높이(0~256)별 등장 횟수를 기록하는 배열 `heights`를 생성합니다.  
+   - 이 과정은 \(O(N \times M)\) 시간에 이루어지며, 이후 반복문에서 동일한 높이 값을 여러 번 계산할 필요가 없어집니다.
+
+2. **목표 높이 반복:**  
+   - 후보 높이(0~256)에 대해, 각 고유 높이와 그 개수를 활용하여 필요한 블록 추가 및 제거 작업을 계산합니다.  
+   - 내부 반복문의 횟수가 상수(257)로 제한되어 있어, 전체 시간 복잡도는 \(O(257 \times 257)\)로 매우 효율적입니다.
+   
+이러한 최적화 덕분에 Python3에서도 시간 초과 없이 문제를 해결할 수 있었습니다.
+
+---
+
+### Retrospective
+
+#### Problem Approach and Initial Solution  
+The problem involves leveling a ground by adjusting block heights, aiming to achieve a uniform height with minimal time cost.  
+In the initial solution, every possible height from 0 to 256 was considered. For each candidate height, the solution iterated through the entire \(N \times M\) grid using nested loops to compute the time required for adjustments.
+
+- **Time Complexity Issue:**  
+  For each target height, the entire grid is scanned, resulting in \(257 \times (N \times M)\) operations in the worst-case scenario.  
+  With large inputs, this approach led to a time limit exceeded (TLE) error when implemented in Python3.
+
+#### Why It Passed with PyPy3  
+PyPy3 employs a JIT compiler that can significantly optimize loop-heavy computations. Even though the underlying algorithm was the same, the execution speed in PyPy3 was improved enough to pass the problem's constraints.
+
+#### Transition to the Final Solution (Using Counting Sort)  
+The final solution introduced a counting sort strategy to overcome the inefficiency:
+
+1. **Preprocessing with Counting:**  
+   - The grid is traversed once to build an array `heights` that counts how many times each height (0 to 256) occurs.  
+   - This preprocessing step takes \(O(N \times M)\) time but avoids re-scanning every cell for each candidate target height.
+
+2. **Iterating Over Target Heights:**  
+   - For each candidate target height (0 to 256), the algorithm uses the frequency counts to calculate the total time required for adjustments by multiplying the difference in heights by their occurrence counts.  
+   - The inner loop is now fixed to 257 iterations regardless of the grid size, resulting in an overall time complexity of \(O(257 \times 257)\), which is efficient.
+   
+This optimization allowed the final solution to run within time limits using Python3.
+
+
