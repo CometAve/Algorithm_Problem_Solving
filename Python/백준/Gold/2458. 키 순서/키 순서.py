@@ -1,49 +1,36 @@
 import sys
+sys.setrecursionlimit(10**6)
 input = sys.stdin.readline
 
+def dfs_set(node, graph, memo):
+    if node in memo:
+        return memo[node]
+    # 자기 자신 포함
+    reachable_set = {node}
+    for nxt in graph[node]:
+        # 집합의 합집합(union)으로 중복된 노드가 포함되지 않도록 함
+        reachable_set |= dfs_set(nxt, graph, memo)
+    memo[node] = reachable_set
+    return reachable_set
 
-def dfs(node, graph, visited):
-    visited[node] = True # 현재 노드 방문 표시
-    count = 1 # 헷갈리니 자기 자신부터 카운트 (나중에 자기 자신 뺌)
-              # 재귀사용할 때 본인 포함해서 계산해야 정확하기 때문
-
-    # 현재 노드와 연결된 모든 노드를 확인
-    for next_node in graph[node]:
-        # 연결된 노드를 방문 안 했으면
-        if not visited[next_node]:
-            # 연결된 노드와 연결된 또 다른 노드들을 전부 카운트
-            count += dfs(next_node, graph, visited)
-    return count
-
-# N : 전체 학생 수, M : 비교한 횟수
 N, M = map(int, input().split())
-
-# 두 가지 그래프 생성:
-# 1. 정방향 그래프: A -> B (A가 B보다 키가 작음)
-# 2. 역방향 그래프: B -> A (B가 A보다 키가 큼)
 graph = [[] for _ in range(N + 1)]
 reverse_graph = [[] for _ in range(N + 1)]
-
 for _ in range(M):
-    V, E = map(int, input().split())
-    graph[V].append(E)
-    reverse_graph[E].append(V)
+    a, b = map(int, input().split())
+    graph[a].append(b)
+    reverse_graph[b].append(a)
 
-result = 0 # 순서를 확실히 알 수 있는 학생 수를 저장할 변수
+memo_forward = {}
+memo_reverse = {}
+result = 0
 
-# 각 학생에 대해
-for student in range(1, N + 1):
-    # 1. 해당 학생보다 키가 큰 학생들의 개수를 계산 (정방향)
-    forward_visited = [False] * (N + 1)
-    count_taller = dfs(student, graph, forward_visited) - 1 # 자기 자신은 빼주기
-
-    # 2. 해당 학생보다 키가 작은 학생들의 개수를 계산 (역방향)
-    backward_visited = [False] * (N + 1)
-    count_shorter = dfs(student, reverse_graph, backward_visited) - 1
-
-    # 두 값의 합이 전체 학생 수 - 1과 같다면,
-    # 즉, student와 비교 가능한 모든 노드와 연결되어 있음을 의미
-    if count_taller + count_shorter == N - 1:
+# 각 학생 i에 대해, 자신보다 키가 큰 집합(taller)과 키가 작은 집합(shorter)을 구함.
+for i in range(1, N + 1):
+    taller = dfs_set(i, graph, memo_forward)
+    shorter = dfs_set(i, reverse_graph, memo_reverse)
+    # 자기 자신이 중복되었으므로 -1 해주면 전체 비교 가능한 학생 수가 N-1이면 순서를 확실히 알 수 있음
+    if len(taller) + len(shorter) - 1 == N:
         result += 1
 
 print(result)
