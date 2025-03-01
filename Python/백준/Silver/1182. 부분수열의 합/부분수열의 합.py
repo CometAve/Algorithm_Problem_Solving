@@ -1,25 +1,36 @@
 import sys
 input = sys.stdin.readline
 
-# 입력 처리
 n, s = map(int, input().split())
 arr = list(map(int, input().split()))
+cnt = 0
 
-# 부분수열의 합이 s인 경우의 수
-count = 0
+def dfs(idx, current_sum):
+    global cnt
+    # 종료조건: 모든 원소에 대해 결정했다면 종료
+    if idx == n:
+        return
 
-# 1부터 시작하여 공집합 제외(양수 크기부터)
-for i in range(1, 1 << n):  # 1 << n은 2^n을 의미
-    current_sum = 0
+    # 남은 원소들로 만들 수 있는 최대/최소 추가값 계산
+    remaining_positive = sum(x for x in arr[idx:] if x > 0)
+    remaining_negative = sum(x for x in arr[idx:] if x < 0)
     
-    # 현재 비트마스크에 해당하는 부분수열 생성
-    for j in range(n):
-        # i의 j번째 비트가 1이면 arr[j]를 부분수열에 포함
-        if i & (1 << j):
-            current_sum += arr[j]
-    
-    # 부분수열의 합이 s와 같으면 카운트 증가
-    if current_sum == s:
-        count += 1
+    # 가지치기 조건:
+    # 1) current_sum이 s보다 작은데, 남은 원소들을 모두 더해도 s에 미치지 못하면 더 볼 필요 없음.
+    if current_sum < s and current_sum + remaining_positive < s:
+        return
+    # 2) current_sum이 s보다 큰데, 남은 원소들을 모두 더해(음의 값만 고려)도 s보다 크면 더 볼 필요 없음.
+    if current_sum > s and current_sum + remaining_negative > s:
+        return
 
-print(count)
+    # 현재 원소를 선택하는 경우
+    new_sum = current_sum + arr[idx]
+    if new_sum == s:
+        cnt += 1
+    dfs(idx + 1, new_sum)
+    
+    # 현재 원소를 선택하지 않는 경우
+    dfs(idx + 1, current_sum)
+
+dfs(0, 0)
+print(cnt)
