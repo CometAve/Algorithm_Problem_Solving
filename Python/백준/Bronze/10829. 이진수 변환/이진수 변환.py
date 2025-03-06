@@ -1,13 +1,7 @@
-import sys
-input = sys.stdin.readline
+# decimail to binary using recursion
+def dec_to_bin(n):
+    if n == 0:
+        return ""
+    return dec_to_bin(n // 2) + str(n % 2)
 
-tar = int(input())
-result = []
-
-while tar > 0:
-    result.append(tar % 2)
-    tar = tar // 2
-    
-result.reverse()
-ans = ''.join(map(str, result))
-print(ans)
+print(dec_to_bin(int(input())))
