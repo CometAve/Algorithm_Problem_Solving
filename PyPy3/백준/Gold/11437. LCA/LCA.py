@@ -1,3 +1,7 @@
+import math
+LOG = int(math.log2(50000)) + 1   # 2^16 > 65,000 (최대 노드 수)
+
+
 import sys
 from collections import deque
 input = sys.stdin.readline
@@ -12,7 +16,6 @@ for _ in range(N-1): # N-1개의 간선 정보를 받아서 트리 생성
     tree[b].append(a)  # 양방향 연결
 
 # Binary Lifting을 위한 준비
-LOG = 21  # 2^20 > 1,000,000 (최대 노드 수)
 parent = [[0] * (N+1) for _ in range(LOG)]
 depth = [0] * (N+1)
 visited = [False] * (N+1)
