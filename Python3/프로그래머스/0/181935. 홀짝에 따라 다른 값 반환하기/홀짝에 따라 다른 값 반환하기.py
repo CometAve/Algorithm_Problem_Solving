@@ -13,7 +13,7 @@ def solution(n):
     # 짝수라면
     else:
         for i in range(n + 1):
-            # 홀수만 더함
+            # 짝수의 제곱의 합
             if i % 2 == 0:
                 answer += i*i
         else:
