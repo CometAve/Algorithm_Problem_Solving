@@ -1,3 +1,5 @@
+import sys
+
 def star(n):
     if n == 3:
         return ['***', '* *', '***']
@@ -10,6 +12,10 @@ def star(n):
             else:
                 result.append(pattern[i % (n//3)]*3)
         return result
-    
-n = int(input())
-print('\n'.join(star(n)))
+
+def main():
+    n = int(sys.stdin.readline())
+    sys.stdout.write('\n'.join(star(n)))
+
+if __name__ == "__main__":
+    main()
