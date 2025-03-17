@@ -1,15 +1,19 @@
+import sys
+sys.setrecursionlimit(10**6)
+input = sys.stdin.readline
+
 count = 0
 result = -1
 
-def merge_sort(arr, p, r):
+def merge_sort(arr, p, r, k):
     if p < r:
         q = (p + r) // 2
-        merge_sort(arr, p, q)
-        merge_sort(arr, q+1, r)
-        merge(arr, p, q, r)
+        merge_sort(arr, p, q, k)
+        merge_sort(arr, q+1, r, k)
+        merge(arr, p, q, r, k)
 
-def merge(arr, p, q, r):
-    global count, result, k
+def merge(arr, p, q, r, k):
+    global count, result
     i = p
     j = q + 1
     tmp = []
@@ -20,11 +24,9 @@ def merge(arr, p, q, r):
         else:
             tmp.append(arr[j])
             j += 1
-
     while i <= q:
         tmp.append(arr[i])
         i += 1
-
     while j <= r:
         tmp.append(arr[j])
         j += 1
@@ -36,11 +38,11 @@ def merge(arr, p, q, r):
             result = arr[p+idx]
 
 def main():
-    global k, result
+    global result
     n, k = map(int, input().split())
     arr = list(map(int, input().split()))
-    merge_sort(arr, 0, n-1)
-    print(result)
+    merge_sort(arr, 0, n-1, k)
+    sys.stdout.write(str(result))
 
 if __name__ == "__main__":
     main()
