@@ -1,5 +1,6 @@
 import sys
 input = sys.stdin.readline
+print = sys.stdout.write
 
 def solve():
     N, M = map(int, input().split())
@@ -54,13 +55,14 @@ def solve():
         if find(i) == i and power[i] != 0:
             answer += 1
 
-    print(answer)
+    print(str(answer) + '\n')
     survivors = []
     for i in range(1, N+1):
         if find(i) == i and power[i] != 0:
             survivors.append(power[i])
     survivors.sort()
-    print(*survivors)
+    for i in survivors:
+        print(str(i) + ' ')
 
 if __name__ == '__main__':
     solve()
