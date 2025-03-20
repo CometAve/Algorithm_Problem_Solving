@@ -1,9 +1,7 @@
 import sys
 input = sys.stdin.readline
-print = sys.stdout.write
 
 def find_parent(parent, x):
-    # 반복문을 이용한 경로 압축
     while parent[x] != x:
         parent[x] = parent[parent[x]]
         x = parent[x]
@@ -12,34 +10,44 @@ def find_parent(parent, x):
 def union_parent(parent, a, b):
     a = find_parent(parent, a)
     b = find_parent(parent, b)
-    if a == b:
-        return
     if a < b:
         parent[b] = a
     else:
         parent[a] = b
 
-def main():
-    v, e = map(int, input().split())
-    edges = []
-    for _ in range(e):
-        a, b, cost = map(int, input().split())
-        edges.append((cost, a, b))
-    
-    edges.sort(key=lambda x: x[0])
-    parents = [i for i in range(v + 1)]
-    
-    cnt = 0
-    result = 0
-    for cost, a, b in edges:
-        if find_parent(parents, a) != find_parent(parents, b):
-            union_parent(parents, a, b)
-            result += cost
-            cnt += 1
-        if cnt == v - 1:
-            break
+# 간선 클래스
+class Edge:
+    def __init__(self, a, b, distance):
+        self.a = a
+        self.b = b
+        self.distance = distance
 
-    print(str(result))
+# 노드의 개수와 간선(union 연산)의 개수 입력 받기
+v, e = map(int, input().split())
+parent = [0] * (v + 1) # 부모 테이블 초기화
 
-if __name__ == "__main__":
-    main()
+# 모든 간선을 담을 리스트와 최종 비용을 담을 변수
+edges = [] 
+result = 0
+
+# 부모 테이블상에서, 부모를 자기 자신으로 초기화
+for i in range(1, v + 1):
+    parent[i] = i
+
+# 모든 간선에 대한 정보 입력 받기
+for _ in range(e):
+    a, b, cost = map(int, input().split())
+    edges.append(Edge(a, b, cost))
+
+# 간선을 비용순으로 정렬
+edges.sort(key=lambda x: x.distance)
+
+# 간선을 하나씩 확인하며
+for edge in edges:
+    a, b, cost = edge.a, edge.b, edge.distance
+    # 사이클이 발생하지 않는 경우에만 집합에 포함
+    if find_parent(parent, a) != find_parent(parent, b):
+        union_parent(parent, a, b)
+        result += cost
+
+sys.stdout.write(str(result))
