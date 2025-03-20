@@ -8,45 +8,43 @@ def solve():
     M, N = map(int, input().split())
     board = [list(map(int, input().split())) for _ in range(N)]
     
-    # (x, y, 말 이동 사용 횟수)
-    visited = set()
-    visited.add((0, 0, 0))
+    # 방문 배열: 각 셀에서 도달 시 남은 말 이동 횟수의 최대값 저장
+    visited = [[-1] * M for _ in range(N)]
+    visited[0][0] = K
     
-    # (x, y, 말 이동 사용 횟수, 현재까지 이동 횟수)
-    q = deque([(0, 0, 0, 0)])
+    # 큐에 상태 (x, y, 남은 말 이동 횟수, 이동 횟수) 저장
+    q = deque([(0, 0, K, 0)])
     
     monkey_dx = [0, 0, 1, -1]
     monkey_dy = [1, -1, 0, 0]
-    
     horse_dx = [1, 2, 2, 1, -1, -2, -2, -1]
     horse_dy = [2, 1, -1, -2, -2, -1, 1, 2]
     
     while q:
-        x, y, horse_used, moves = q.popleft()
+        x, y, remain, moves = q.popleft()
         
         if x == N - 1 and y == M - 1:
             print(str(moves))
             return
         
-        # 말 이동 사용 수는 그대로 유지
+        # 원숭이처럼 4방향 이동
         for dx, dy in zip(monkey_dx, monkey_dy):
             nx, ny = x + dx, y + dy
             if 0 <= nx < N and 0 <= ny < M and board[nx][ny] == 0:
-                state = (nx, ny, horse_used)
-                if state not in visited:
-                    visited.add(state)
-                    q.append((nx, ny, horse_used, moves + 1))
-        
-        # 말 이동 사용 수 1 증가 (단, K 이내)
-        if horse_used < K:
+                # 이전에 더 많은 말 이동 가능 횟수를 가지고 방문한 적이 없다면 큐에 추가
+                if visited[nx][ny] < remain:
+                    visited[nx][ny] = remain
+                    q.append((nx, ny, remain, moves + 1))
+                    
+        # 말 이동 (남은 횟수 > 0인 경우)
+        if remain > 0:
             for dx, dy in zip(horse_dx, horse_dy):
                 nx, ny = x + dx, y + dy
                 if 0 <= nx < N and 0 <= ny < M and board[nx][ny] == 0:
-                    state = (nx, ny, horse_used + 1)
-                    if state not in visited:
-                        visited.add(state)
-                        q.append((nx, ny, horse_used + 1, moves + 1))
-    
+                    if visited[nx][ny] < remain - 1:
+                        visited[nx][ny] = remain - 1
+                        q.append((nx, ny, remain - 1, moves + 1))
+                        
     print("-1")
 
 if __name__ == "__main__":
