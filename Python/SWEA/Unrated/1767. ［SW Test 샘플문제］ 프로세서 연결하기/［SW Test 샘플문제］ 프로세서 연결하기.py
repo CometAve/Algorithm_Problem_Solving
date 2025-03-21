@@ -3,10 +3,13 @@
 # 2. 코어를 연결할 수 있는 방향은 상하좌우 4방향이다.
 # 3. 코어를 연결할 수 있는지 확인하는 함수를 만든다.
 # 4. dfs로 코어를 연결할지 말지 결정한다.
-# 5. dfs(idx, connected, total, cores, board, n, result)
-# 6. idx: 현재 코어 인덱스, connected: 연결된 코어 수, total: 전선 길이, cores: 코어 위치, board: 멕시노스, n: 멕시노스 크기, result: [최대로 연결된 코어의 수, 최소 전선 길이]
-# 7. dfs 종료 조건: idx == len(cores) 
-# 8. result 업데이트
+# 4-1. 코어를 연결하는 경우: 전선을 설치하고 다음 코어로 넘어간다.
+# 4-2. 코어를 연결하지 않는 경우: 다음 코어로 넘어간다.
+# 5. 가지치기 기준 : 남은 코어 모두 연결해도 현재 최적보다 못하면 반환
+# 6. dfs(idx, connected, total, cores, board, n, result)
+# 7. idx: 현재 코어 인덱스, connected: 연결된 코어 수, total: 전선 길이, cores: 코어 위치, board: 멕시노스, n: 멕시노스 크기, result: [최대로 연결된 코어의 수, 최소 전선 길이]
+# 8. dfs 종료 조건: idx == len(cores) 
+# 9. result 업데이트
 
 def can_place(x, y, dx, dy, board, n):
     path = []
@@ -20,6 +23,9 @@ def can_place(x, y, dx, dy, board, n):
     return path
 
 def dfs(idx, connected, total, cores, board, n, result):
+    # 가지치기: 남은 코어 모두 연결해도 현재 최적보다 못하면 반환
+    if len(cores) - idx + connected < result[0]:
+        return
     if idx == len(cores):
         if connected > result[0] or (connected == result[0] and total < result[1]):
             result[0] = connected
