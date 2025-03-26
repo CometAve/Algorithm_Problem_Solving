@@ -23,31 +23,45 @@ def find_parent(x, parent):
     parent[x] = find_parent(parent[x], parent)
     return parent[x]
 
-# 두 노드를 연결
-def union(x, y, parent):
+def union(x, y, parent, rank):
     x = find_parent(x, parent)
     y = find_parent(y, parent)
-    # 더 작은 노드를 부모로 설정
-    if x < y:
-        parent[y] = x
-    else:
-        parent[x] = y
+    
+    if x != y:
+        if rank[x] < rank[y]:
+            parent[x] = y
+        else:
+            parent[y] = x
+            if rank[x] == rank[y]:
+                rank[x] += 1
 
 def solve():
     N = int(input())
     M = int(input())
     parent = [i for i in range(N+1)]
+    rank = [0] * (N+1)  # 랭크 초기화
+    
+    # a와 b가 같은 경우는 제외
     edges = []
     for _ in range(M):
         a, b, c = map(int, input().split())
-        edges.append((c, a, b))
-    edges.sort()
+        if a != b:  # a == b인 경우는 제외
+            edges.append((a, b, c))
+    
+    edges.sort(key=lambda x: x[2]) # 비용 기준으로 오름차순 정렬
+    
     result = 0
-    for edge in edges:
-        c, a, b = edge
+    edge_count = 0
+    
+    for a, b, c in edges:
         if find_parent(a, parent) != find_parent(b, parent):
-            union(a, b, parent)
+            union(a, b, parent, rank)
             result += c
+            edge_count += 1
+            
+            # 조기 종료 - MST 완성
+            if edge_count == N-1:
+                break
     
     print(str(result))
 
