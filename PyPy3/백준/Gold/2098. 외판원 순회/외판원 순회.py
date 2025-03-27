@@ -1,33 +1,54 @@
-# 문제 해결
-# DP와 비트마스크를 이용해 풀 수 있는 문제이다.
-# DP[현재 도시][방문한 도시들]로 정의하자.
-# DP[현재 도시][방문한 도시들] = min(DP[현재 도시][방문한 도시들], DP[이전 도시][방문한 도시들] + W[이전 도시][현재 도시])
-# 이때, 방문한 도시들은 비트마스크로 표현할 수 있다.
-
 import sys
 input = sys.stdin.readline
 INF = sys.maxsize
 
-def tsp(cur, visited, N, W, dp):
-    if visited == (1 << N) - 1:
-        return W[cur][0] if W[cur][0] != 0 else INF
-
-    if dp[cur][visited] != -1:
-        return dp[cur][visited]
-
-    dp[cur][visited] = INF
-    for i in range(1, N):
-        if W[cur][i] == 0 or visited & (1 << i):
-            continue
-        dp[cur][visited] = min(dp[cur][visited], tsp(i, visited | (1 << i), N, W, dp) + W[cur][i])
-
-    return dp[cur][visited]
-
 def solve():
     N = int(input())
     W = [list(map(int, input().split())) for _ in range(N)]
-    dp = [[-1] * (1 << N) for _ in range(N)]
-    sys.stdout.write(str(tsp(0, 1, N, W, dp)))
+    
+    # DP 테이블 초기화
+    dp = [[INF] * (1 << N) for _ in range(N)]
+    
+    # 시작 도시는 0번
+    dp[0][1] = 0  # 0번 도시만 방문한 상태
+    
+    # 모든 부분집합에 대해 반복
+    for visited in range(1, 1 << N):
+        # 시작 도시(0번)는 반드시 방문해야 함
+        if not (visited & 1):
+            continue
+            
+        # 현재 도시에 대해 반복
+        for cur in range(N):
+            # 현재 도시를 방문하지 않은 경우 건너뜀
+            if not (visited & (1 << cur)):
+                continue
+                
+            # 이전 방문 상태 (현재 도시를 제외한 상태)
+            prev_visited = visited & ~(1 << cur)
+            
+            # 현재 도시가 시작 도시(0번)이고, 모든 도시를 방문한 경우 건너뜀
+            if cur == 0 and prev_visited != 0:
+                continue
+                
+            # 이전 도시에 대해 반복
+            for prev in range(N):
+                # 이전 도시를 방문하지 않았거나, 이전 도시에서 현재 도시로 갈 수 없는 경우 건너뜀
+                if not (prev_visited & (1 << prev)) or W[prev][cur] == 0:
+                    continue
+                    
+                # 현재 상태의 최소 비용 갱신
+                dp[cur][visited] = min(dp[cur][visited], dp[prev][prev_visited] + W[prev][cur])
+    
+    # 모든 도시를 방문하고 시작 도시(0번)로 돌아오는 최소 비용
+    result = INF
+    all_visited = (1 << N) - 1
+    
+    for last in range(1, N):
+        if W[last][0] != 0:  # 마지막 도시에서 시작 도시로 갈 수 있는 경우
+            result = min(result, dp[last][all_visited] + W[last][0])
+            
+    return result
 
 if __name__ == '__main__':
-    solve()
+    sys.stdout.write(str(solve()))
