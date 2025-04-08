@@ -19,42 +19,46 @@ def bfs(start, n, m, graph):
     queue = deque([start])
     visited = [[-1] * m for _ in range(n)]
     visited[start[0]][start[1]] = 0
-
+    
+    # 벽(0)인 위치는 시작부터 0으로 초기화
+    for i in range(n):
+        for j in range(m):
+            if graph[i][j] == 0:
+                visited[i][j] = 0
+    
     while queue:
         x, y = queue.popleft()
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
-            if 0 <= nx < n and 0 <= ny < m and graph[nx][ny] == 1 and visited[nx][ny] == -1:
+            # 방문 가능한 위치 확인 (벽이 아닌 곳)
+            if 0 <= nx < n and 0 <= ny < m and visited[nx][ny] == -1 and graph[nx][ny] != 0:
                 visited[nx][ny] = visited[x][y] + 1
                 queue.append((nx, ny))
-
+    
     return visited
 
 def solve():
     n, m = map(int, input().split())
-    graph = [list(map(int, input().split())) for _ in range(n)]
-
-    # 목표 지점 찾기
+    graph = []
     target = None
+    
+    # 입력과 동시에 목표 지점 찾기
     for i in range(n):
-        for j in range(m):
-            if graph[i][j] == 2:
-                target = (i, j)
-                break
-        if target:
-            break
-
+        row = list(map(int, input().split()))
+        graph.append(row)
+        if not target:
+            for j in range(m):
+                if row[j] == 2:
+                    target = (i, j)
+    
     # BFS 수행
     visited = bfs(target, n, m, graph)
-
-    # 결과 출력
+    
+    # 결과 출력 (join으로 최적화)
     for i in range(n):
-        for j in range(m):
-            if graph[i][j] == 0:
-                print("0 ")
-            else:
-                print(f"{visited[i][j]} " if visited[i][j] != -1 else "-1 ")
-        print("\n")
+        print(" ".join(map(str, visited[i])))
+        if i < n-1:
+            print("\n")
 
 if __name__ == "__main__":
-  solve()
+    solve()
